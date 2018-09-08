@@ -1,0 +1,14 @@
+import os
+
+DEBUG = True
+
+SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://root@localhost/cmsc_495'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+DATABASE_CONNECT_OPTIONS = {}
+
+THREADS_PER_PAGE = 8
+
+CSRF_ENABLED = True
+CSRF_SESSION_KEY = "secret"
+
+SECRET_KEY = "secret"

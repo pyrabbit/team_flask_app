@@ -1,9 +1,14 @@
+import os
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 application = Flask(__name__)
 application.url_map.strict_slashes = False
-application.config.from_object('config')
+
+if os.environ['FLASK_ENV'] == 'development':
+    application.config.from_object('config_development')
+else:
+    application.config.from_object('config')
 
 db = SQLAlchemy(application)
 
@@ -17,7 +22,7 @@ from application.mod_purchases.controllers import mod_purchases as purchases_mod
 application.register_blueprint(purchases_module)
 
 # TODO remove comment when migrations and production database is setup
-# db.create_all()
+db.create_all()
 
 @application.route("/")
 def welcome():
