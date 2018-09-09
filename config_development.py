@@ -1,5 +1,3 @@
-import os
-
 DEBUG = True
 
 SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://root@localhost/cmsc_495'
