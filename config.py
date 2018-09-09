@@ -1,3 +1,5 @@
+import os
+
 DEBUG = True
 
 SQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://cmsc495admin:{os.environ["DB_PASSWORD"]}@cmsc495.ce4jv8k28ioa.us-east-2.rds.amazonaws.com/cmsc_495'
