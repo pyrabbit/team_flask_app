@@ -31,3 +31,8 @@ if os.environ['FLASK_ENV'] == 'development':
 @application.route("/")
 def welcome():
     return render_template('landing/index.html')
+
+
+@application.errorhandler(404)
+def resource_not_found(error):
+    return render_template('404.html'), 404
