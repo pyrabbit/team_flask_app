@@ -2,11 +2,38 @@
 {% block title %}Inventory{% endblock %}
 
 {% block content %}
-    <div class="container">
-        {% if vehicles|length > 0 %}
-            <p>We do have vehicles in our inventory but we haven't finished building this page yet.</p>
-        {% else %}
-            <p>We do not have any vehicles in our inventory.</p>
-        {% endif %}
+    <div class="album py-5 bg-light">
+        <div class="container">
+            {% if vehicles|length > 0 %}
+                <div class="row">
+                    {% for vehicle in vehicles %}
+                        <div class="col-md-4">
+                            <div class="card mb-4 shadow-sm">
+                                <img class="card-img-top"
+                                     src="https://picsum.photos/g/225/100"
+                                     alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h5>
+                                    <p class="card-text">
+                                    <ul>
+                                        <li>Color: {{ vehicle.color }}</li>
+                                        <li>Price: ${{ vehicle.price }}</li>
+                                    </ul>
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                        </div>
+                                        <small class="text-muted">{{ vehicle.mileage }} miles</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>We do not have any vehicles in our inventory.</p>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
