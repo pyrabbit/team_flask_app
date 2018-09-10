@@ -1,6 +1,9 @@
 import os
+import stripe
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+
+stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 application = Flask(__name__)
 application.url_map.strict_slashes = False
