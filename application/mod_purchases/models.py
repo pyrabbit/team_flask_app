@@ -5,6 +5,7 @@ from application.models import Base
 class Purchase(Base):
     __tablename__ = 'purchases'
 
-    amount = db.Column(db.Integer)
-    purchaser_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicles.id'), nullable=False)
+    purchase_price = db.Column(db.DECIMAL(7,2))
+    purchase_date = db.Column(db.DateTime(timezone=True), default=db.func.current_timestamp())
+    users_fk = db.Column(db.Integer, db.ForeignKey('users.id', name='purchases_ibfk_1'), nullable=False, index=True)
+    vehicles_fk = db.Column(db.Integer, db.ForeignKey('vehicles.id', name='purchases_ibfk_2'), nullable=False, index=True)
