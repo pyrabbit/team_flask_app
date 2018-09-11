@@ -20,7 +20,7 @@ def create():
 
         if user and user.check_password(form.password.data):
             session['user_id'] = user.id
-            flash(f'Hello {user.first_name}, you have successfully logged in!')
+            flash(f'Hello {user.first_name}, you have successfully logged in!', 'info')
 
             return redirect(url_for('welcome'))
         else:
