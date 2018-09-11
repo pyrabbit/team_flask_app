@@ -130,7 +130,6 @@
                     hiddenInput.setAttribute('value', token.id);
                     form.appendChild(hiddenInput);
 
-                    console.log(form);
                     // Submit the form
                     form.submit();
                 }
@@ -144,11 +143,8 @@
                             // Inform the customer that there was an error.
                             var errorElement = document.getElementById('card-errors');
                             errorElement.textContent = result.error.message;
-                            console.log('an error occurred when creating a token')
                         } else {
                             // Send the token to your server.
-                            console.log('handling stripe token');
-                            console.log(result.token);
                             stripeTokenHandler(result.token);
                         }
                     });
