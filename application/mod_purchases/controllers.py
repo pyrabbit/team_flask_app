@@ -1,8 +1,9 @@
 from flask import Blueprint
-from flask import render_template, abort
+from flask import render_template, abort, redirect, url_for, flash
 from application.mod_purchases.models import Purchase
 from application.mod_inventory.models import Vehicle
 from application.mod_purchases.forms import PurchaseForm
+from application import application, stripe
 
 mod_purchases = Blueprint('purchases', __name__, url_prefix='/purchases')
 
@@ -22,6 +23,15 @@ def create(vehicle_id):
 
     form = PurchaseForm()
     if form.validate_on_submit():
-        return render_template('welcome')
+        flash(f'You have successfully purchased a {vehicle.year} {vehicle.make} {vehicle.model}!', 'success')
+
+        stripe.Charge.create(
+            amount=int(vehicle.price * 100),
+            currency="usd",
+            source=form.stripe_token.data,
+            description=f'Purchased {vehicle.year} {vehicle.make} {vehicle.model}.'
+        )
+
+        return redirect(url_for('welcome'))
     else:
-        return abort(404)
+        return render_template('purchases/new.html', vehicle=vehicle, form=form)

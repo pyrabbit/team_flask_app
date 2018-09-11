@@ -40,4 +40,4 @@ class PurchaseForm(FlaskForm):
 
     stripe_token = HiddenField('Stripe Token', [
         DataRequired(message='Stripe did not provide a token.')
-    ], _name='stripeToken')
+    ])
