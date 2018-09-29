@@ -10,5 +10,6 @@ class Vehicle(Base):
     color = db.Column(db.String(100))
     year = db.Column(db.Integer)
     mileage = db.Column(db.Integer)
-    price = db.Column(db.DECIMAL(7,2))
+    price = db.Column(db.DECIMAL(7, 2))
     purchase = db.relationship('Purchase', backref='vehicle', lazy=True, uselist=False)
+    images = db.relationship('Image', backref='vehicle', lazy=True, uselist=True)

@@ -3,13 +3,15 @@ from flask import render_template, abort, redirect, url_for, flash
 from application.mod_purchases.models import Purchase
 from application.mod_inventory.models import Vehicle
 from application.mod_purchases.forms import PurchaseForm
+from application.mod_sessions.controllers import authenticate_user
 from application import application, stripe
 
 mod_purchases = Blueprint('purchases', __name__, url_prefix='/purchases')
 
 
 @mod_purchases.route('/<int:vehicle_id>/new', methods=['GET'])
-def new(vehicle_id):
+@authenticate_user
+def new(user, vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
     if vehicle:
         return render_template('purchases/new.html', vehicle=vehicle, form=PurchaseForm())
@@ -18,7 +20,8 @@ def new(vehicle_id):
 
 
 @mod_purchases.route('/<int:vehicle_id>', methods=['POST'])
-def create(vehicle_id):
+@authenticate_user
+def create(user, vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
 
     form = PurchaseForm()
