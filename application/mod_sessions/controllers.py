@@ -58,6 +58,6 @@ def authorize_user(method):
         if not user.admin:
             return abort(403)
         else:
-            return user
+            return method(*args, **kwargs)
 
     return check_admin_user
