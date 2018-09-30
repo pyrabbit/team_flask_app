@@ -30,23 +30,23 @@ def create(user, vehicle_id):
     if form.validate_on_submit():
         flash(f'You have successfully purchased a {vehicle.year} {vehicle.make} {vehicle.model}!', 'success')
 
+        charge = stripe.Charge.create(
+            amount=int(vehicle.price * 100),
+            currency="usd",
+            source=form.stripe_token.data,
+            description=f'Purchased {vehicle.year} {vehicle.make} {vehicle.model}.'
+        )
+
         purchase = Purchase(
             purchase_price=vehicle.price,
             purchase_date=datetime.now(),
             users_fk=user.id,
-            vehicles_fk=vehicle.id
+            vehicles_fk=vehicle.id,
+            stripe_charge_id=charge.id
         )
 
         db.session.add(purchase)
         db.session.commit()
-
-        stripe.Charge.create(
-            amount=int(vehicle.price * 100),
-            currency="usd",
-            source=form.stripe_token.data,
-            description=f'Purchased {vehicle.year} {vehicle.make} {vehicle.model}.',
-            metadata={'purchase_id': purchase.id}
-        )
 
         return redirect(url_for('welcome'))
     else:
@@ -63,12 +63,7 @@ def succeeded():
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, os.environ['STRIPE_WH_SECRET'])
         charge = json.loads(request.data)
-
-        purchase = Purchase.query.get(charge['data']['object']['metadata']['purchase_id'])
-        purchase.stripe_charge_id = charge['data']['object']['id']
-        db.session.commit()
-
     except stripe.error.SignatureVerificationError as e:
         return jsonify(message='Something bad has happened.'), 500
 
-    return jsonify(message='Thanks Stripe! Payment has been recorded.'), 200
+    return jsonify(message='Thanks Stripe! Payment has been verified and the delivery process has begun.'), 200
