@@ -45,7 +45,7 @@ def create(user, vehicle_id):
 def succeeded():
     # verify Stripe signature
     payload = request.data
-    sig_header = request.headers.get('HTTP_STRIPE_SIGNATURE')
+    sig_header = request.headers.get('Stripe-Signature', None)
     event = None
 
     try:
