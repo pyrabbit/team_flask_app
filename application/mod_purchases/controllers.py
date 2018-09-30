@@ -1,10 +1,11 @@
 from flask import Blueprint
-from flask import render_template, abort, redirect, url_for, flash
+from flask import render_template, abort, redirect, url_for, flash, jsonify, request, json
 from application.mod_purchases.models import Purchase
 from application.mod_inventory.models import Vehicle
 from application.mod_purchases.forms import PurchaseForm
 from application.mod_sessions.controllers import authenticate_user
 from application import application, stripe
+import os
 
 mod_purchases = Blueprint('purchases', __name__, url_prefix='/purchases')
 
@@ -38,3 +39,19 @@ def create(user, vehicle_id):
         return redirect(url_for('welcome'))
     else:
         return render_template('purchases/new.html', vehicle=vehicle, form=form)
+
+
+@mod_purchases.route('/succeeded', methods=['POST'])
+def succeeded():
+    # verify Stripe signature
+    payload = request.data
+    sig_header = request.headers.get('HTTP_STRIPE_SIGNATURE')
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, os.environ['STRIPE_WH_SECRET'])
+        charge = json.loads(request.data)
+    except stripe.error.SignatureVerificationError as e:
+        return jsonify(message='Something bad has happened.'), 500
+
+    return jsonify(message='Thanks Stripe! Payment has been recorded.'), 200

@@ -1,0 +1,20 @@
+branch-defaults:
+  default:
+    environment: team-flask-app-dev
+    group_suffix: null
+  master:
+    environment: team-flask-app-dev
+global:
+  application_name: team_flask_app
+  branch: null
+  default_ec2_keyname: null
+  default_platform: python-3.6
+  default_region: us-east-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: school
+  repository: null
+  sc: null
+  workspace_type: Application
