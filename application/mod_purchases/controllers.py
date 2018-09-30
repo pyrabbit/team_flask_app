@@ -4,8 +4,9 @@ from application.mod_purchases.models import Purchase
 from application.mod_inventory.models import Vehicle
 from application.mod_purchases.forms import PurchaseForm
 from application.mod_sessions.controllers import authenticate_user
-from application import application, stripe
+from application import application, stripe, db
 import os
+from datetime import datetime
 
 mod_purchases = Blueprint('purchases', __name__, url_prefix='/purchases')
 
@@ -29,11 +30,22 @@ def create(user, vehicle_id):
     if form.validate_on_submit():
         flash(f'You have successfully purchased a {vehicle.year} {vehicle.make} {vehicle.model}!', 'success')
 
+        purchase = Purchase(
+            purchase_price=vehicle.price,
+            purchase_date=datetime.now(),
+            users_fk=user.id,
+            vehicles_fk=vehicle.id
+        )
+
+        db.session.add(purchase)
+        db.session.commit()
+
         stripe.Charge.create(
             amount=int(vehicle.price * 100),
             currency="usd",
             source=form.stripe_token.data,
-            description=f'Purchased {vehicle.year} {vehicle.make} {vehicle.model}.'
+            description=f'Purchased {vehicle.year} {vehicle.make} {vehicle.model}.',
+            metadata={'purchase_id': purchase.id}
         )
 
         return redirect(url_for('welcome'))
@@ -51,6 +63,11 @@ def succeeded():
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, os.environ['STRIPE_WH_SECRET'])
         charge = json.loads(request.data)
+
+        purchase = Purchase.query.get(charge['data']['object']['metadata']['purchase_id'])
+        purchase.stripe_charge_id = charge['data']['object']['id']
+        db.session.commit()
+
     except stripe.error.SignatureVerificationError as e:
         return jsonify(message='Something bad has happened.'), 500
 
