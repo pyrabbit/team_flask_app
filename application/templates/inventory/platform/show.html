@@ -1,0 +1,33 @@
+{% extends "layout/application.html" %}
+{% block title %}Modify Item{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <ul class="nav justify-content-center mb-5">
+            <li class="nav-item">
+                <a class="nav-link active btn btn-outline-primary" href="{{ url_for('inventory.index') }}">All
+                    Vehicles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active btn btn-outline-secondary"
+                   href="{{ url_for('inventory.platform_edit', vehicle_id=vehicle.id) }}">Edit Vehicle</a>
+            </li>
+            <li class="nav-item">
+                <form method="post" action="{{ url_for('inventory.platform_delete', vehicle_id=vehicle.id) }}">
+                    <button type="submit" class="nav-link btn btn-outline-danger">Remove Vehicle</button>
+                </form>
+            </li>
+        </ul>
+
+        <h1>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h1>
+
+        <strong>Product Details:</strong>
+        <ul>
+            <li>Price: ${{ vehicle.price }}</li>
+            <li>Mileage: {{ vehicle.mileage }}</li>
+            <li>Color: {{ vehicle.color }}</li>
+        </ul>
+
+        <h1>Pictures</h1>
+    </div>
+{% endblock %}
