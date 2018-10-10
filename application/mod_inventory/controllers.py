@@ -1,6 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, Response
 from flask import render_template, abort, flash, redirect, url_for, request, jsonify
-from application.mod_inventory.models import Vehicle
+from application.mod_inventory.models import Vehicle, Image
 from application.mod_inventory.forms import VehicleForm
 from application import db, application
 import boto3
@@ -121,7 +121,16 @@ def platform_images_create(vehicle_id):
         file = request.files['file']
         key = str(image_id) + pathlib.Path(file.filename).suffix
         s3.put_object(Body=file, Bucket=application.config['S3_INVENTORY_BUCKET'], Key=key)
+        url = 'https://s3.us-east-2.amazonaws.com/teamflaskapp-inventory-images/' + key
+        image = Image(vehicles_fk=vehicle_id, url=url)
 
-        return jsonify(message='success'), 200
+        db.session.add(image)
+        db.session.commit()
+
+        resp = Response()
+        resp.headers['Location'] = url
+        resp.status_code = 201
+
+        return resp
     else:
         return abort(404)

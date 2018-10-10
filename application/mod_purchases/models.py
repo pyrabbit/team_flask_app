@@ -10,9 +10,3 @@ class Purchase(Base):
     users_fk = db.Column(db.Integer, db.ForeignKey('users.id', name='purchases_ibfk_1'), nullable=False, index=True)
     vehicles_fk = db.Column(db.Integer, db.ForeignKey('vehicles.id', name='purchases_ibfk_2'), nullable=False, index=True)
     stripe_charge_id = db.Column(db.String(100))
-
-class Image(Base):
-    __tablename__ = 'images'
-
-    url = db.Column(db.String(500))
-    vehicles_fk = db.Column(db.Integer, db.ForeignKey('vehicles.id', name='images_ibfk_2'), nullable=False, index=True)

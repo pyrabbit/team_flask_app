@@ -13,3 +13,9 @@ class Vehicle(Base):
     price = db.Column(db.DECIMAL(7, 2))
     purchase = db.relationship('Purchase', backref='vehicle', lazy=True, uselist=False)
     images = db.relationship('Image', backref='vehicle', lazy=True, uselist=True)
+
+class Image(Base):
+    __tablename__ = 'images'
+
+    url = db.Column(db.String(500))
+    vehicles_fk = db.Column(db.Integer, db.ForeignKey('vehicles.id', name='images_ibfk_2'), nullable=False, index=True)
