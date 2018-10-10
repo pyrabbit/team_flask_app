@@ -5,6 +5,7 @@ from application.mod_inventory.forms import VehicleForm
 from application import db, application
 import boto3
 import uuid
+import pathlib
 
 mod_inventory = Blueprint('inventory', __name__, url_prefix='/vehicles')
 s3 = boto3.client('s3')
@@ -118,7 +119,8 @@ def platform_images_create(vehicle_id):
     if vehicle:
         image_id = uuid.uuid4()
         file = request.files['file']
-        s3.put_object(Body=file, Bucket=application.config['S3_INVENTORY_BUCKET'], Key=str(image_id))
+        key = str(image_id) + pathlib.Path(file.filename).suffix
+        s3.put_object(Body=file, Bucket=application.config['S3_INVENTORY_BUCKET'], Key=key)
 
         return jsonify(message='success'), 200
     else:
