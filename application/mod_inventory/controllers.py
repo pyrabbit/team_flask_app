@@ -112,9 +112,6 @@ def platform_delete(vehicle_id):
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>/images', methods=['POST'])
 def platform_images_create(vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
-    print(request)
-
-    bucket = application.config['S3_INVENTORY_BUCKET']
 
     if vehicle:
         image_id = uuid.uuid4()

@@ -14,6 +14,7 @@ class Vehicle(Base):
     purchase = db.relationship('Purchase', backref='vehicle', lazy=True, uselist=False)
     images = db.relationship('Image', backref='vehicle', lazy=True, uselist=True)
 
+
 class Image(Base):
     __tablename__ = 'images'
 
