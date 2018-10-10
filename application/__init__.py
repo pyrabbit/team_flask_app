@@ -3,8 +3,6 @@ import stripe
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 
-stripe.api_key = os.environ['STRIPE_SECRET_KEY']
-
 application = Flask(__name__)
 application.url_map.strict_slashes = False
 
@@ -14,6 +12,7 @@ else:
     application.config.from_object('config')
 
 db = SQLAlchemy(application)
+stripe.api_key = application.config['STRIPE_SECRET_KEY']
 
 from application.mod_sessions.controllers import mod_sessions as sessions_module
 

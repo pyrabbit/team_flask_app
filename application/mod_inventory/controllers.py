@@ -1,10 +1,13 @@
 from flask import Blueprint
-from flask import render_template, abort, flash, redirect, url_for
+from flask import render_template, abort, flash, redirect, url_for, request, jsonify
 from application.mod_inventory.models import Vehicle
 from application.mod_inventory.forms import VehicleForm
-from application import db
+from application import db, application
+import boto3
+import uuid
 
 mod_inventory = Blueprint('inventory', __name__, url_prefix='/vehicles')
+s3 = boto3.client('s3')
 
 
 @mod_inventory.route('/', methods=['GET'])
@@ -37,6 +40,16 @@ def platform_show(vehicle_id):
 #     form = VehicleForm()
 
 
+@mod_inventory.route('/platform/inventory', methods=['POST'])
+def platform_create():
+    form = VehicleForm()
+
+    if form.validate_on_submit():
+        print('hello')
+    else:
+        return render_template('inventory/platform/new.html', form=form)
+
+
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>/edit', methods=['GET'])
 def platform_edit(vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
@@ -54,6 +67,7 @@ def platform_edit(vehicle_id):
         return render_template('inventory/platform/edit.html', vehicle=vehicle, form=form)
     else:
         return abort(404)
+
 
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>', methods=['POST'])
 def platform_update(vehicle_id):
@@ -79,6 +93,7 @@ def platform_update(vehicle_id):
     else:
         return abort(404)
 
+
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>/destroy', methods=['POST'])
 def platform_delete(vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
@@ -93,8 +108,18 @@ def platform_delete(vehicle_id):
         return abort(404)
 
 
+@mod_inventory.route('/platform/inventory/<int:vehicle_id>/images', methods=['POST'])
+def platform_images_create(vehicle_id):
+    vehicle = Vehicle.query.get(vehicle_id)
+    print(request)
 
+    bucket = application.config['S3_INVENTORY_BUCKET']
 
+    if vehicle:
+        image_id = uuid.uuid4()
+        file = request.files['file']
+        s3.put_object(Body=file, Bucket=application.config['S3_INVENTORY_BUCKET'], Key=str(image_id))
 
-
-
+        return jsonify(message='success'), 200
+    else:
+        return abort(404)

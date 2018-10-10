@@ -5,7 +5,6 @@ from application.mod_inventory.models import Vehicle
 from application.mod_purchases.forms import PurchaseForm
 from application.mod_sessions.controllers import authenticate_user
 from application import application, stripe, db
-import os
 from datetime import datetime
 
 mod_purchases = Blueprint('purchases', __name__, url_prefix='/purchases')
@@ -61,7 +60,7 @@ def succeeded():
     event = None
 
     try:
-        event = stripe.Webhook.construct_event(payload, sig_header, os.environ['STRIPE_WH_SECRET'])
+        event = stripe.Webhook.construct_event(payload, sig_header, application.config['STRIPE_WH_SECRET'])
         charge = json.loads(request.data)
     except stripe.error.SignatureVerificationError as e:
         return jsonify(message='Something bad has happened.'), 500
