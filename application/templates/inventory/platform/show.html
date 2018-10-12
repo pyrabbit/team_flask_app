@@ -37,6 +37,14 @@
         </ul>
 
         <h1>Pictures</h1>
-        <form action="{{ url_for('inventory.platform_images_create', vehicle_id=vehicle.id) }}" class="dropzone"></form>
+        <form action="{{ url_for('inventory.platform_images_create', vehicle_id=vehicle.id) }}" class="dropzone mb-5"></form>
+
+        <div class="row">
+            {% for image in vehicle.images %}
+                <div class="col-lg-3">
+                    <img class="img-fluid rounded" src="{{ image.url }}" width="200" alt="">
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
