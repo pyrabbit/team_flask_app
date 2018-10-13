@@ -1,3 +1,5 @@
+# this file holds all the form objects associated with inventory items
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField, DecimalField
 from wtforms.validators import DataRequired, Email, EqualTo

@@ -1,3 +1,5 @@
+# this file contains all the database models associated with inventory to include images
+
 from application import db
 from application.models import Base
 

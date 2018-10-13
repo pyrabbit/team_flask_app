@@ -1,3 +1,5 @@
+# this is the base model which is used to extend the rest of our database models
+
 from application import db
 
 

@@ -1,3 +1,5 @@
+# This file contains all the controller routing for the inventory resources
+
 from flask import Blueprint, Response
 from flask import render_template, abort, flash, redirect, url_for, request, jsonify
 from application.mod_inventory.models import Vehicle, Image
@@ -10,15 +12,18 @@ import uuid
 import pathlib
 
 mod_inventory = Blueprint('inventory', __name__, url_prefix='/vehicles')
+# initialize the boto3 client. boto3 is the AWS programmatic API for Python
 s3 = boto3.client('s3')
 
 
+# this route is intended to list all existing inventory
 @mod_inventory.route('/', methods=['GET'])
 def index():
     vehicles = Vehicle.query.all()
     return render_template('inventory/index.html', vehicles=vehicles)
 
 
+# this route is intended to view a specific query
 @mod_inventory.route('/<int:vehicle_id>', methods=['GET'])
 def show(vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
@@ -28,6 +33,7 @@ def show(vehicle_id):
         return abort(404)
 
 
+# this route is for an admin to view a piece of inventory
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>', methods=['GET'])
 @authenticate_user
 @authorize_user
@@ -40,6 +46,7 @@ def platform_show(user, vehicle_id):
         return abort(404)
 
 
+# this route is for an admin to create a new piece of inventory
 @mod_inventory.route('/platform/inventory/new', methods=['GET'])
 @authenticate_user
 @authorize_user
@@ -47,6 +54,7 @@ def platform_new(user):
     return render_template('inventory/platform/new.html', form=VehicleForm())
 
 
+# this route is for an admin to create a piece of inventory
 @mod_inventory.route('/platform/inventory', methods=['POST'])
 @authenticate_user
 @authorize_user
@@ -71,6 +79,7 @@ def platform_create(user):
         return render_template('inventory/platform/new.html', form=form)
 
 
+# this route is used by admins to edit a piece of inventory
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>/edit', methods=['GET'])
 @authenticate_user
 @authorize_user
@@ -92,6 +101,7 @@ def platform_edit(user, vehicle_id):
         return abort(404)
 
 
+# this route is used by admins to update an existing inventory item
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>', methods=['POST'])
 @authenticate_user
 @authorize_user
@@ -119,6 +129,7 @@ def platform_update(user, vehicle_id):
         return abort(404)
 
 
+# this route is used to destroy an existing inventory item
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>/destroy', methods=['POST'])
 @authenticate_user
 @authorize_user
@@ -126,9 +137,11 @@ def platform_delete(user, vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
 
     if vehicle:
+        # delete all images associated with vehicle
         for image in vehicle.images:
             db.session.delete(image)
 
+        # delete all purchases associated with vehicle
         purchases = Purchase.query.filter_by(vehicles_fk=vehicle_id)
         for purchase in purchases:
             db.session.delete(purchase)
@@ -142,6 +155,7 @@ def platform_delete(user, vehicle_id):
         return abort(404)
 
 
+# this endpoint allows admins to upload an image associaeted with a piece of inventory
 @mod_inventory.route('/platform/inventory/<int:vehicle_id>/images', methods=['POST'])
 @authenticate_user
 @authorize_user

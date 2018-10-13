@@ -1,7 +1,11 @@
+# this file contains all the form objects for purchase related events
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, SelectField
 from wtforms.validators import DataRequired
 
+# a list of states we currently support. since we are a startup, we only support the states we
+# live in.
 states = [
     ('GA', 'Georgia'),
     ('NC', 'North Carolina'),

@@ -1,3 +1,5 @@
+# this file contains all the form objects used during the registration process
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo
