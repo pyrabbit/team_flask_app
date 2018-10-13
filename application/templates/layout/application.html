@@ -17,8 +17,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
-    <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 
@@ -50,7 +50,9 @@
                         {% if session['admin'] %}
                             <a href="{{ url_for('inventory.platform_new') }}" class="dropdown-item">Create New
                                 Vehicle</a>
-                             <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('purchases.platform_index') }}" class="dropdown-item">Purchase
+                                History</a>
+                            <div class="dropdown-divider"></div>
                         {% endif %}
                         <a class="dropdown-item" href="{{ url_for('sessions.destroy') }}">Sign Out</a>
                     </div>

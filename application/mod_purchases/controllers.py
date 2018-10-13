@@ -3,7 +3,7 @@ from flask import render_template, abort, redirect, url_for, flash, jsonify, req
 from application.mod_purchases.models import Purchase
 from application.mod_inventory.models import Vehicle
 from application.mod_purchases.forms import PurchaseForm
-from application.mod_sessions.controllers import authenticate_user
+from application.mod_sessions.controllers import authenticate_user, authorize_user
 from application import application, stripe, db
 from datetime import datetime
 
@@ -70,6 +70,8 @@ def succeeded():
 
 
 @mod_purchases.route('/platform/purchases', methods=['GET'])
-def platform_index():
+@authenticate_user
+@authorize_user
+def platform_index(user):
     purchases = Purchase.query.all()
-    return render_template('/platform/purchases/index.html', purchases=purchases)
+    return render_template('/purchases/platform/index.html', purchases=purchases)

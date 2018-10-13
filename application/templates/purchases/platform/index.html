@@ -1,0 +1,43 @@
+{% extends "layout/application.html" %}
+{% block title %}Purchase History{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1>Purchase History</h1>
+        {% if purchases|length > 0 %}
+            <table class="table table-sm">
+                <thead class="thead-light">
+                <tr>
+                    <th>Purchase ID</th>
+                    <th>Purchase Date</th>
+                    <th>Purchase Price</th>
+                    <th>Purchaser ID</th>
+                    <th>Vehicle ID</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for purchase in purchases %}
+                    <tr>
+                        <td>{{ purchase.id }}</td>
+                        <td>{{ purchase.purchase_date }}</td>
+                        <td>${{ purchase.purchase_price }}</td>
+                        <td>{{ purchase.users_fk }}</td>
+                        <td>{{ purchase.vehicles_fk }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No purchases have been made yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}
