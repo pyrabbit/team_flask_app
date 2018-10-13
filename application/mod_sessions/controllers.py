@@ -21,6 +21,8 @@ def create():
 
         if user and user.check_password(form.password.data):
             session['user_id'] = user.id
+            session['admin'] = user.admin
+
             flash(f'Hello {user.first_name}, you have successfully logged in!', 'info')
 
             redirect_path = session.pop('redirect_path', url_for('welcome'))
@@ -35,6 +37,7 @@ def create():
 @mod_sessions.route('/sign_out', methods=['GET'])
 def destroy():
     session.pop('user_id', None)
+    session.pop('admin', None)
     return render_template('sessions/new.html', form=LoginForm())
 
 

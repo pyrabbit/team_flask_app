@@ -19,4 +19,5 @@ class Image(Base):
     __tablename__ = 'images'
 
     url = db.Column(db.String(500))
-    vehicles_fk = db.Column(db.Integer, db.ForeignKey('vehicles.id', name='images_ibfk_2'), nullable=False, index=True)
+    vehicles_fk = db.Column(db.Integer, db.ForeignKey('vehicles.id', name='images_ibfk_2'),
+                            nullable=False, index=True)

@@ -32,8 +32,10 @@
                                         <div class="btn-group">
                                             <a href="{{ url_for('inventory.show', vehicle_id=vehicle.id) }}"
                                                class="btn btn-sm btn-outline-secondary">View</a>
-                                            <a href="{{ url_for('inventory.platform_show', vehicle_id=vehicle.id) }}"
-                                               class="btn btn-sm btn-outline-secondary">Modify</a>
+                                            {% if session['admin'] %}
+                                                <a href="{{ url_for('inventory.platform_show', vehicle_id=vehicle.id) }}"
+                                                   class="btn btn-sm btn-outline-secondary">Modify</a>
+                                            {% endif %}
                                         </div>
                                         <small class="text-muted">{{ vehicle.mileage }} miles</small>
                                     </div>

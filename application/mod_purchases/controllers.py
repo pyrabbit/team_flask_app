@@ -14,6 +14,7 @@ mod_purchases = Blueprint('purchases', __name__, url_prefix='/purchases')
 @authenticate_user
 def new(user, vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
+
     if vehicle:
         return render_template('purchases/new.html', vehicle=vehicle, form=PurchaseForm())
     else:
@@ -66,3 +67,9 @@ def succeeded():
         return jsonify(message='Something bad has happened.'), 500
 
     return jsonify(message='Thanks Stripe! Payment has been verified and the delivery process has begun.'), 200
+
+
+@mod_purchases.route('/platform/purchases', methods=['GET'])
+def platform_index():
+    purchases = Purchase.query.all()
+    return render_template('/platform/purchases/index.html', purchases=purchases)
