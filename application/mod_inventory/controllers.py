@@ -1,6 +1,7 @@
 from flask import Blueprint, Response
 from flask import render_template, abort, flash, redirect, url_for, request, jsonify
 from application.mod_inventory.models import Vehicle, Image
+from application.mod_purchases.models import Purchase
 from application.mod_inventory.forms import VehicleForm
 from application.mod_sessions.controllers import authenticate_user, authorize_user
 from application import db, application
@@ -127,6 +128,11 @@ def platform_delete(user, vehicle_id):
     if vehicle:
         for image in vehicle.images:
             db.session.delete(image)
+
+        purchases = Purchase.query.filter_by(vehicles_fk=vehicle_id)
+        for purchase in purchases:
+            db.session.delete(purchase)
+
         db.session.delete(vehicle)
         db.session.commit()
 

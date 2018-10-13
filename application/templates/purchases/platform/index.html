@@ -19,6 +19,7 @@
                     <th>Purchase ID</th>
                     <th>Purchase Date</th>
                     <th>Purchase Price</th>
+                    <th>Stripe Charge ID</th>
                     <th>Purchaser ID</th>
                     <th>Vehicle ID</th>
                 </tr>
@@ -30,6 +31,7 @@
                         <td>{{ purchase.id }}</td>
                         <td>{{ purchase.purchase_date }}</td>
                         <td>${{ purchase.purchase_price }}</td>
+                        <td>{{ purchase.stripe_charge_id }}</td>
                         <td>{{ purchase.users_fk }}</td>
                         <td>{{ purchase.vehicles_fk }}</td>
                     </tr>

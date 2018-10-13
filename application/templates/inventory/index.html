@@ -17,9 +17,15 @@
                     {% for vehicle in vehicles %}
                         <div class="col-md-4">
                             <div class="card mb-4 shadow-sm">
-                                <img class="card-img-top"
-                                     src="https://picsum.photos/g/225/100"
-                                     alt="Card image cap">
+                                {% if vehicle.images|length > 0 %}
+                                    <img class="card-img-top"
+                                         src="{{ vehicle.images[0].url }}"
+                                         alt="Card image cap" height="200px">
+                                {% else %}
+                                    <img class="card-img-top"
+                                         src="https://picsum.photos/100/200?image=964"
+                                         alt="Card image cap" height="200px">
+                                {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h5>
                                     <p class="card-text">
